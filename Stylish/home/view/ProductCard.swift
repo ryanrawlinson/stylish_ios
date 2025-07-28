@@ -9,11 +9,12 @@ import SwiftUI
 
 let placeholderImageURLString = "https://storage.googleapis.com/fir-auth-1c3bc.appspot.com/1692255251854-xbox.jpg"
 
-struct ProductGridCard: View {
+struct ProductCard: View {
+    var product: Product
+
     var body: some View {
-        let product: Product = Product(id: 1, title: "Microsoft Xbox Series X", image: placeholderImageURLString, price: 57, description: "Experience the ultimate gaming console with lightning-fast loading times, stunning graphics, and immersive gameplay.", brand: "microsoft", model: "Xbox Series X", color: "white", category: "gaming", popular: true, onSale: nil, discount: 4)
-        VStack() {
-                AsyncImage(url: URL(string: placeholderImageURLString)!) { phase in
+        VStack(spacing: 0) {
+            AsyncImage(url: URL(string: product.image)!) { phase in
                     switch phase {
                     case .empty:
                         ProgressView()
@@ -36,7 +37,6 @@ struct ProductGridCard: View {
                 }
                 .clipShape(UnevenRoundedRectangle(cornerRadii: .init(topLeading: 0, bottomLeading: 8, bottomTrailing: 8, topTrailing: 0)))
                 
-                Spacer()
                 
                 VStack(alignment: .leading) {
                     Text(product.title)
@@ -65,5 +65,5 @@ struct ProductGridCard: View {
 }
 
 #Preview {
-    ProductGridCard()
+    ProductCard(product: Product(id: 1, title: "Microsoft Xbox Series X", image: placeholderImageURLString, price: 57, description: "Experience the ultimate gaming console with lightning-fast loading times, stunning graphics, and immersive gameplay.", brand: "microsoft", model: "Xbox Series X", color: "white", category: "gaming", popular: true, onSale: nil, discount: 4))
 }

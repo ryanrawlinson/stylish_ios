@@ -6,3 +6,18 @@
 //
 
 import Foundation
+
+enum APIEndpoint {
+    case products
+    
+    var path: String {
+        switch self {
+        case .products:
+            return "/products"
+        }
+    }
+    
+    var url: String {
+        return APIConfig.baseURL + path
+    }
+}
