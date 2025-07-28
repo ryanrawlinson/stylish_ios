@@ -8,14 +8,60 @@
 import SwiftUI
 
 struct ContentView: View {
+    @State private var products: [Product] = []
+    @State private var errorMessage: String?
+    
+    let columns = [GridItem(.flexible()), GridItem(.flexible())]
+    
     var body: some View {
-        VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundStyle(.tint)
-            Text("Hello, world!")
+        NavigationView {
+            
+                ScrollView {
+                    LazyVGrid(columns: columns, spacing: 16) {
+                        ForEach(products) { product in
+                            ProductCard(product: product)
+                        }
+                    }
+                }
+                .navigationTitle("Products")
+                .task {
+                    await loadProducts()
+                }
+            
         }
-        .padding()
+    }
+    
+    func loadProducts() async {
+        do {
+            let response = try await APIService.shared.fetch(from: APIEndpoint.products.url, type: ProductResponse.self)
+            self.products = response.products
+        } catch {
+            errorMessage = error.localizedDescription
+            print("Error Message: \(errorMessage ?? "Unknown Error")")
+        }
+    }
+}
+
+struct ProductListItem: View {
+    var product: Product
+    
+    var body: some View {
+        HStack {
+            AsyncImage(url: URL(string: product.image), scale: 2) { image in
+                image.resizable()
+            } placeholder: {
+                Image(systemName: "photo")
+            }
+            .frame(width: 75, height: 75)
+            .clipShape(.rect(cornerRadius: 8))
+            
+            Text(product.title)
+                .font(.headline)
+                .lineLimit(3)
+            Spacer()
+            Text("$\(product.price)")
+                .font(.headline)
+        }
     }
 }
 

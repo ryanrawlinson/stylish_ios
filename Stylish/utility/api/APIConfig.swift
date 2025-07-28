@@ -6,3 +6,7 @@
 //
 
 import Foundation
+
+enum APIConfig {
+    static let baseURL = "https://fakestoreapi.in/api"
+}
