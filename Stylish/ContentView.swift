@@ -23,7 +23,19 @@ struct ContentView: View {
                         }
                     }
                 }
-                .navigationTitle("Products")
+                .toolbar {
+                    ToolbarItem(placement: .navigationBarLeading) {
+                        Image("HamburgerMenu")
+                    }
+                    
+                    ToolbarItem(placement: .principal) {
+                        Image("ToolbarLogo")
+                    }
+                    
+                    ToolbarItem(placement: .topBarTrailing) {
+                        Image("Profile")
+                    }
+                }
                 .task {
                     await loadProducts()
                 }
@@ -33,8 +45,8 @@ struct ContentView: View {
     
     func loadProducts() async {
         do {
-            let response = try await APIService.shared.fetch(from: APIEndpoint.products.url, type: ProductResponse.self)
-            self.products = response.products
+            let response = try await APIService.shared.fetch(from: APIEndpoint.products.url, type: [Product].self)
+            self.products = response
         } catch {
             errorMessage = error.localizedDescription
             print("Error Message: \(errorMessage ?? "Unknown Error")")

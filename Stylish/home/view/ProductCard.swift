@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-let placeholderImageURLString = "https://storage.googleapis.com/fir-auth-1c3bc.appspot.com/1692255251854-xbox.jpg"
+let placeholderImageURLString = "https://fakestoreapi.com/img/81fPKd-2AYL._AC_SL1500_.jpg"
 
 struct ProductCard: View {
     var product: Product
@@ -37,7 +37,6 @@ struct ProductCard: View {
                 }
                 .clipShape(UnevenRoundedRectangle(cornerRadii: .init(topLeading: 0, bottomLeading: 8, bottomTrailing: 8, topTrailing: 0)))
                 
-                
                 VStack(alignment: .leading) {
                     Text(product.title)
                         .font(.headline)
@@ -49,7 +48,23 @@ struct ProductCard: View {
                     Text("$\(product.price, specifier: "%.2f")")
                         .font(.subheadline)
                         .foregroundColor(.primary)
-                        .padding(.top, 4)
+                    
+                    HStack(alignment: .center, spacing: 4) {
+                        HStack(spacing: 0) {
+                            ForEach(0..<Int(product.rating.rate), id: \.self) { _ in
+                                Image(systemName: "star.fill")
+                                    .foregroundColor(.yellow)
+                                    .font(.caption)
+                            }
+                        }
+                        
+                        
+                            Text("(\(product.rating.count))")
+                                .font(.caption)
+                                .fontWeight(.light)
+                                .foregroundStyle(.secondary)
+                        
+                    }
                 }
                 .padding(EdgeInsets(top: 0, leading: 8, bottom: 2, trailing: 8))
                 .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
@@ -65,5 +80,5 @@ struct ProductCard: View {
 }
 
 #Preview {
-    ProductCard(product: Product(id: 1, title: "Microsoft Xbox Series X", image: placeholderImageURLString, price: 57, description: "Experience the ultimate gaming console with lightning-fast loading times, stunning graphics, and immersive gameplay.", brand: "microsoft", model: "Xbox Series X", color: "white", category: "gaming", popular: true, onSale: nil, discount: 4))
+    ProductCard(product: Product(id: 1, title: "Microsoft Xbox Series X", price: 57.24, description: "Experience the ultimate gaming console with lightning-fast loading times, stunning graphics, and immersive gameplay.", image:  placeholderImageURLString, category: "gaming", rating: Rating(rate: 4.9, count: 123)))
 }
