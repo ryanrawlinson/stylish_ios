@@ -8,5 +8,5 @@
 import Foundation
 
 enum APIConfig {
-    static let baseURL = "https://fakestoreapi.in/api"
+    static let baseURL = "https://fakestoreapi.com"
 }
