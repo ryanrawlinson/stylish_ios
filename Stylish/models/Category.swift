@@ -6,3 +6,9 @@
 //
 
 import Foundation
+
+struct Category: Identifiable {
+    let id: Int
+    let name: String
+    var isSelected: Bool = false
+}

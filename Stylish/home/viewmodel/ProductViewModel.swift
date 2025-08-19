@@ -6,3 +6,17 @@
 //
 
 import Foundation
+
+@Observable
+class ProductViewModel {
+    var product: Product?
+    var isFavorite: Bool = false
+    
+    init(product: Product?) {
+        self.product = product
+    }
+    
+    func onFavoriteTapped() {
+        isFavorite = !isFavorite
+    }
+}
