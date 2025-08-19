@@ -8,48 +8,62 @@
 import SwiftUI
 
 struct ContentView: View {
-    @State private var products: [Product] = []
-    @State private var errorMessage: String?
+    @State private var homeViewModel: HomeViewModel = .init()
     
     let columns = [GridItem(.flexible()), GridItem(.flexible())]
     
     var body: some View {
         NavigationView {
             
-                ScrollView {
-                    LazyVGrid(columns: columns, spacing: 16) {
-                        ForEach(products) { product in
-                            ProductCard(product: product)
+            ScrollView {
+                HStack {
+                    SearchBar()
+                    
+                    VStack {
+                        Image("Filter_White")
+                            .resizable()
+                            .frame(width: 18, height: 18)
+                            .padding()
+                            .foregroundStyle(.white)
+                            .background(.black)
+                    }
+                    .cornerRadius(8)
+                }
+                .padding()
+                
+                ScrollView(.horizontal, showsIndicators: false) {
+                    HStack {
+                        ForEach(homeViewModel.categories, id: \.category.id) { categoryViewModel in
+                            CategoryButton(viewModel: categoryViewModel, onTap: {
+                                homeViewModel.selectCategory(categoryViewModel)
+                            })
                         }
                     }
-                }
-                .toolbar {
-                    ToolbarItem(placement: .navigationBarLeading) {
-                        Image("HamburgerMenu")
-                    }
+                    .padding()
                     
-                    ToolbarItem(placement: .principal) {
-                        Image("ToolbarLogo")
-                    }
-                    
-                    ToolbarItem(placement: .topBarTrailing) {
-                        Image("Profile")
+                }
+                
+                LazyVGrid(columns: columns, spacing: 16) {
+                    ForEach(homeViewModel.products, id: \.product?.id) { viewModel in
+                        ProductCard(viewModel: viewModel)
                     }
                 }
-                .task {
-                    await loadProducts()
+            }
+            .toolbar {
+                ToolbarItem(placement: .navigationBarLeading) {
+                    Text("Discover")
+                        .font(.largeTitle)
+                        .fontWeight(.bold)
                 }
+                
+                ToolbarItem(placement: .topBarTrailing) {
+                    Image("Bell")
+                }
+            }
+            .task {
+                await homeViewModel.fetchProducts()
+            }
             
-        }
-    }
-    
-    func loadProducts() async {
-        do {
-            let response = try await APIService.shared.fetch(from: APIEndpoint.products.url, type: [Product].self)
-            self.products = response
-        } catch {
-            errorMessage = error.localizedDescription
-            print("Error Message: \(errorMessage ?? "Unknown Error")")
         }
     }
 }
